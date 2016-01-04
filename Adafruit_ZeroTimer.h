@@ -1,0 +1,29 @@
+#include "Arduino.h"
+
+#define SAMD21G
+#include "utility/tc.h"
+#include "utility/tc_interrupt.h"
+#include "samd21/include/samd21g18a.h"
+
+
+class Adafruit_ZeroTimer {
+ public:
+  Adafruit_ZeroTimer(uint8_t tn);
+
+  boolean PWMout(boolean pwmout, uint8_t channum, uint8_t pin);
+  void setPeriodMatch(uint32_t period, uint32_t match, uint8_t channum = 1);
+  void enable(boolean en);
+
+  void configure(tc_clock_prescaler prescale, tc_counter_size countersize, tc_wave_generation wavegen);
+  void setCompare(uint8_t channum, uint32_t compare);
+  void setTop(uint32_t top);
+
+  void setCallback(boolean enable, tc_callback cb_type, tc_callback_t callback_func = NULL);
+
+ private:
+  uint8_t _timernum;
+  tc_counter_size _countersize;
+
+  struct tc_config config_tc;
+  struct tc_module tc_instance;
+};
