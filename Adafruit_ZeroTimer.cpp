@@ -14,7 +14,6 @@ boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
 
   if (! pwmout) {
     config_tc.pwm_channel[channum].enabled = false;
-
   } else {
     uint32_t pinout = 0xFFFF;
     uint32_t pinmux = 0xFFFF;
@@ -87,7 +86,14 @@ boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
   return true;
 }
 
-void Adafruit_ZeroTimer::configure(tc_clock_prescaler prescale, tc_counter_size countersize, tc_wave_generation wavegen)
+void Adafruit_ZeroTimer::invertWave(tc_waveform_invert_output invert) {
+  Tc *const tc_modules[TC_INST_NUM] = TC_INSTS;
+
+  config_tc.waveform_invert_output = invert;
+  tc_init(&tc_instance, tc_modules[_timernum - TC_INSTANCE_OFFSET], &config_tc);
+}
+
+void Adafruit_ZeroTimer::configure(tc_clock_prescaler prescale, tc_counter_size countersize, tc_wave_generation wavegen, tc_count_direction countdir)
 {
   if (_timernum > TC_INST_MAX_ID) return;
   Tc *const tc_modules[TC_INST_NUM] = TC_INSTS;
@@ -102,6 +108,7 @@ void Adafruit_ZeroTimer::configure(tc_clock_prescaler prescale, tc_counter_size 
   config_tc.clock_prescaler = prescale;
   config_tc.counter_size    = countersize;
   config_tc.wave_generation = wavegen;
+  config_tc.count_direction = countdir;
 
   // initialize
   tc_init(&tc_instance, tc_modules[_timernum - TC_INSTANCE_OFFSET], &config_tc);

@@ -14,10 +14,10 @@ class Adafruit_ZeroTimer {
   void setPeriodMatch(uint32_t period, uint32_t match, uint8_t channum = 1);
   void enable(boolean en);
 
-  void configure(tc_clock_prescaler prescale, tc_counter_size countersize, tc_wave_generation wavegen);
+  void configure(tc_clock_prescaler prescale, tc_counter_size countersize, tc_wave_generation wavegen, tc_count_direction countdir = TC_COUNT_DIRECTION_UP);
   void setCompare(uint8_t channum, uint32_t compare);
   void setTop(uint32_t top);
-
+  void invertWave(tc_waveform_invert_output inv);
   void setCallback(boolean enable, tc_callback cb_type, tc_callback_t callback_func = NULL);
 
  private:
