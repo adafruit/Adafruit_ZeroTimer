@@ -467,6 +467,13 @@
  #define TC_ASYNC   1
 #endif
 
+// fix for Trinket/Gemma M0
+#if defined(__SAMD21E18A__)
+ #define SAMD21     1
+ #define SAMD21E    1
+ #define TC_ASYNC   1
+#endif
+
 /**
  * Define port features set according to different device family
  * @{

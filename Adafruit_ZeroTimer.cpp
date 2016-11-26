@@ -42,31 +42,39 @@ boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
 	if (pin == 20) { // a.k.a SDA
 	  pinout = PIN_PA22E_TC4_WO0; pinmux = MUX_PA22E_TC4_WO0;
 	}
+#if defined(__SAMD21G18A__)
 	if (pin == A1) {
 	  pinout = PIN_PB08E_TC4_WO0; pinmux = MUX_PB08E_TC4_WO0;
 	}
+#endif
       } 
       if (channum == 1) {
 	if (pin == 21) {  // a.k.a SCL
 	  pinout = PIN_PA23E_TC4_WO1; pinmux = MUX_PA23E_TC4_WO1;
 	}
+#if defined(__SAMD21G18A__)
 	if (pin == A2) {
 	  pinout = PIN_PB09E_TC4_WO1; pinmux = MUX_PB09E_TC4_WO1;
 	}
+#endif
       } 
     }
 
     if (_timernum == 5) {
       if (channum == 0) {
+#if defined(__SAMD21G18A__)
 	if (pin == MOSI) {
 	  pinout = PIN_PB10E_TC5_WO0; pinmux = MUX_PB10E_TC5_WO0;
 	}
+#endif
 	// only other option is D-, skip it!
       } 
       if (channum == 1) {
+#if defined(__SAMD21G18A__)
 	if (pin == SCK) {
 	  pinout = PIN_PB11E_TC5_WO1; pinmux = MUX_PB11E_TC5_WO1;
 	}
+#endif
 	// only other option is D+, skip it!
       }
     }

@@ -1,10 +1,15 @@
 #include "Arduino.h"
 
-#define SAMD21G
+#if defined(__SAMD21G18A__)
+  #define SAMD21G
+  #include "samd21/include/samd21g18a.h"
+#elif defined(__SAMD21E18A__)
+  #define SAMD21E
+  #include "samd21/include/samd21e18a.h"
+#endif
+
 #include "utility/tc.h"
 #include "utility/tc_interrupt.h"
-#include "samd21/include/samd21g18a.h"
-
 
 class Adafruit_ZeroTimer {
  public:
