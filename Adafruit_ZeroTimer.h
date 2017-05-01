@@ -9,6 +9,7 @@
 #endif
 
 #include "utility/tc.h"
+}
 #include "utility/tc_interrupt.h"
 
 class Adafruit_ZeroTimer {
