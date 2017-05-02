@@ -8,9 +8,8 @@
   #include "samd21/include/samd21e18a.h"
 #endif
 
-#include "utility/tc.h"
-}
-#include "utility/tc_interrupt.h"
+#include "tc.h"
+#include "tc_interrupt.h"
 
 class Adafruit_ZeroTimer {
  public:
