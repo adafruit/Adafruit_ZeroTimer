@@ -1,0 +1,21 @@
+{
+  "name": "Adafruit ZeroTimer",
+  "keywords": "tc, samd, zeroTimer",
+  "description": "happy wrappers for TC modules 3,4,5 on SAMD21",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adafruit/Adafruit_ZeroTimer.git"
+  },
+  "version": "1.0.0",
+  "authors": {
+    "name": "Adafruit"
+  },
+  "exclude": [
+    "examples"
+  ],
+  "dependencies": [
+      { "name": "Adafruit Arduino Zero ASF Core Library" }
+  ],
+  "frameworks": "arduino",
+  "platforms": "*"
+}
