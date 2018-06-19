@@ -5,20 +5,35 @@
 Adafruit_ZeroTimer zt3 = Adafruit_ZeroTimer(3);
 Adafruit_ZeroTimer zt4 = Adafruit_ZeroTimer(4);
 
+//define the interrupt handlers
+extern "C" {
+  void TC3_Handler(){
+    Adafruit_ZeroTimer::timerHandler(3);
+  }
+
+  void TC4_Handler(){
+    Adafruit_ZeroTimer::timerHandler(4);
+  }
+
+  void TC5_Handler(){
+    Adafruit_ZeroTimer::timerHandler(5);
+  }
+};
+
 // the timer 3 callbacks
-void Timer3Callback0(struct tc_module *const module_inst)
+void Timer3Callback0()
 {
   digitalWrite(12, LOW);
 }
 
-void Timer3Callback1(struct tc_module *const module_inst)
+void Timer3Callback1()
 {
   digitalWrite(12, HIGH);
 }
 
 // timer 4 callback, set dac output!
 volatile uint16_t dacout=0;
-void Timer4Callback0(struct tc_module *const module_inst)
+void Timer4Callback0()
 {
   //analogWrite(A0, dacout++); // too slow!
 
@@ -40,9 +55,9 @@ void setup() {
   analogWriteResolution(10);
   analogWrite(A0, 128); // initialize the DAC
 
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("Timer callback tester");
-  
+
   /********************* Timer #3, 16 bit, two PWM outs, period = 65535 */
   zt3.configure(TC_CLOCK_PRESCALER_DIV2, // prescaler
                 TC_COUNTER_SIZE_16BIT,   // bit width of timer/counter
@@ -55,13 +70,13 @@ void setup() {
   zt3.setCallback(true, TC_CALLBACK_CC_CHANNEL1, Timer3Callback1);  // this one sets pin high
   zt3.enable(true);
   
-  /********************* Timer #4, 8 bit, one callback with adjustable period = 350KHz ~ 2.86us for DAC updates */
+  /********************* Timer #4, 8 bit, one callback with adjustable period */
   zt4.configure(TC_CLOCK_PRESCALER_DIV1, // prescaler
                 TC_COUNTER_SIZE_8BIT,   // bit width of timer/counter
                 TC_WAVE_GENERATION_MATCH_PWM  // match style
                 );
 
-  zt4.setPeriodMatch(150, 1, 0); // ~350khz, 1 match, channel 0
+  zt4.setPeriodMatch(150, 100, 0); // 1 match, channel 0
   zt4.setCallback(true, TC_CALLBACK_CC_CHANNEL0, Timer4Callback0);  // set DAC in the callback
   zt4.enable(true);
   
