@@ -15,6 +15,8 @@
 #endif
 #endif
 
+extern "C" {
+
 #define TC_MAX_CALLBACKS (TC_CALLBACK_BITS*3)
 #define TC_CALLBACK_BITS 6
 static void(* __cb[TC_MAX_CALLBACKS]) (void);
@@ -22,6 +24,8 @@ static void(* __cb[TC_MAX_CALLBACKS]) (void);
 static uint32_t _register_callback_mask = 0;
 /** Bit mask for callbacks enabled */
 static uint32_t _enable_callback_mask = 0;
+
+};
 
 static inline bool tc_is_syncing(Tc *const hw)
 {
@@ -525,21 +529,23 @@ void Adafruit_ZeroTimer::enable(boolean en)
   }
 }
 
+extern "C" {
+
 //TODO: this could probably be optimized to be faster
-static void __tc_cb_handler(uint32_t mask, uint32_t offset){
-  mask = mask << offset;
-  for(int i=offset; i < offset+TC_CALLBACK_BITS; i++){
-    if(!mask) break;
-    uint32_t _active_cb = (1UL << i);
-    if( (mask & _active_cb) && (_enable_callback_mask & _active_cb) 
-        && (_register_callback_mask & _active_cb)){
-      __cb[i](); //call the callback
+static inline void __tc_cb_handler(uint32_t mask, uint32_t offset){
+  mask &= _enable_callback_mask >> offset;
+  int i = 0;
+  uint32_t _active_cb = 1;
+  while(mask){
+    if(mask & _active_cb){
+      __cb[i+offset](); //call the callback
     }
     mask &= ~_active_cb;
+    i++;
+    _active_cb <<= 1;
   }
 }
 
-extern "C" {
 void TC3_Handler(void){
   uint32_t mask = TC3->COUNT8.INTFLAG.reg;
   __tc_cb_handler(mask, 0);
@@ -557,4 +563,5 @@ void TC5_Handler(void){
   __tc_cb_handler(mask, TC_CALLBACK_BITS*2);
   TC5->COUNT8.INTFLAG.reg = 0b00111011; //clear
 }
+
 };
