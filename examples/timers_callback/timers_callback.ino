@@ -5,6 +5,21 @@
 Adafruit_ZeroTimer zt3 = Adafruit_ZeroTimer(3);
 Adafruit_ZeroTimer zt4 = Adafruit_ZeroTimer(4);
 
+//define the interrupt handlers
+extern "C" {
+  void TC3_Handler(){
+    Adafruit_ZeroTimer::timerHandler(3);
+  }
+
+  void TC4_Handler(){
+    Adafruit_ZeroTimer::timerHandler(4);
+  }
+
+  void TC5_Handler(){
+    Adafruit_ZeroTimer::timerHandler(5);
+  }
+};
+
 // the timer 3 callbacks
 void Timer3Callback0()
 {

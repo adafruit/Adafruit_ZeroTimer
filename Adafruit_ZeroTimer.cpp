@@ -546,22 +546,26 @@ static inline void __tc_cb_handler(uint32_t mask, uint32_t offset){
   }
 }
 
-void TC3_Handler(void){
-  uint32_t mask = TC3->COUNT8.INTFLAG.reg;
-  __tc_cb_handler(mask, 0);
-  TC3->COUNT8.INTFLAG.reg = 0b00111011; //clear
-}
 
-void TC4_Handler(void){
-  uint32_t mask = TC4->COUNT8.INTFLAG.reg;
-  __tc_cb_handler(mask, TC_CALLBACK_BITS);
-  TC4->COUNT8.INTFLAG.reg = 0b00111011; //clear
-}
-
-void TC5_Handler(void){
-  uint32_t mask = TC4->COUNT8.INTFLAG.reg;
-  __tc_cb_handler(mask, TC_CALLBACK_BITS*2);
-  TC5->COUNT8.INTFLAG.reg = 0b00111011; //clear
+void Adafruit_ZeroTimer::timerHandler(uint8_t timerNum){
+  uint32_t mask;
+  switch(timerNum){
+    case 3:
+      mask = TC3->COUNT8.INTFLAG.reg;
+      __tc_cb_handler(mask, 0);
+      TC3->COUNT8.INTFLAG.reg = 0b00111011; //clear
+      break;
+    case 4:
+      mask = TC4->COUNT8.INTFLAG.reg;
+      __tc_cb_handler(mask, TC_CALLBACK_BITS);
+      TC4->COUNT8.INTFLAG.reg = 0b00111011; //clear
+      break;
+    case 5:
+      mask = TC5->COUNT8.INTFLAG.reg;
+      __tc_cb_handler(mask, TC_CALLBACK_BITS*2);
+      TC5->COUNT8.INTFLAG.reg = 0b00111011; //clear
+      break;
+  }
 }
 
 };

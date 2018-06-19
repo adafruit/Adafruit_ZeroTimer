@@ -92,6 +92,7 @@ class Adafruit_ZeroTimer {
   void invertWave(uint8_t invert);
   void setCallback(boolean enable, tc_callback cb_type, void(* callback_func) (void) = NULL);
 
+  static void timerHandler(uint8_t timerNum);
  protected:
   uint8_t _timernum;
 
