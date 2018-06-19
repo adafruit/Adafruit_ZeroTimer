@@ -103,12 +103,6 @@ class Adafruit_ZeroTimer {
   uint8_t _waveform_invert_output;
   tc_count_direction _count_direction;
 
-  void(* _callback[TC_CALLBACK_N]) (void);
-	/** Bit mask for callbacks registered */
-	uint8_t _register_callback_mask;
-	/** Bit mask for callbacks enabled */
-	uint8_t _enable_callback_mask;
-
   struct counter_8_bit {
     uint8_t compare_capture_channel[NUM_CC_CHANNELS];
     uint8_t period;

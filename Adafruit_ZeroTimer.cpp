@@ -15,9 +15,13 @@
 #endif
 #endif
 
-#ifndef TC_ASYNC
-#define TC_ASYNC true
-#endif
+#define TC_MAX_CALLBACKS (TC_CALLBACK_BITS*3)
+#define TC_CALLBACK_BITS 6
+static void(* __cb[TC_MAX_CALLBACKS]) (void);
+/** Bit mask for callbacks registered */
+static uint32_t _register_callback_mask = 0;
+/** Bit mask for callbacks enabled */
+static uint32_t _enable_callback_mask = 0;
 
 static inline bool tc_is_syncing(Tc *const hw)
 {
@@ -48,15 +52,15 @@ bool Adafruit_ZeroTimer::tc_init()
   /* Array of PM APBC mask bit position for different TC instances */
   uint32_t inst_pm_apbmask[] = {PM_APBCMASK_TC3, PM_APBCMASK_TC4, PM_APBCMASK_TC5};
 
-#if TC_ASYNC == true
   /* Initialize parameters */
-  for (uint8_t i = 0; i < TC_CALLBACK_N; i++)
+  uint32_t cbmask = 0;
+  for (uint8_t i = 0; i < TC_CALLBACK_BITS; i++)
   {
-    _callback[i] = NULL;
+    __cb[(instance*TC_CALLBACK_BITS) + i] = NULL;
+    cbmask |= (1UL << ((instance*TC_CALLBACK_BITS) + i));
   }
-  _register_callback_mask = 0x00;
-  _enable_callback_mask = 0x00;
-#endif
+  _register_callback_mask &= ~cbmask;
+  _enable_callback_mask &= ~cbmask;
 
   /* Check if odd numbered TC modules are being configured in 32-bit
 	 * counter size. Only even numbered counters are allowed to be
@@ -378,8 +382,7 @@ void Adafruit_ZeroTimer::setPeriodMatch(uint32_t period, uint32_t match, uint8_t
 {
   if (_counter_size == TC_COUNTER_SIZE_8BIT)
   {
-    while (tc_is_syncing(_hw))
-      ;
+    while (tc_is_syncing(_hw));
     _counter_8_bit.period = period;
     _hw->COUNT8.PER.reg = (uint8_t)period;
     setCompare(channum, match);
@@ -398,63 +401,65 @@ void Adafruit_ZeroTimer::setPeriodMatch(uint32_t period, uint32_t match, uint8_t
 
 void Adafruit_ZeroTimer::setCallback(boolean enable, tc_callback cb_type, void (*callback_func)(void))
 {
+
+  uint8_t instance = _timernum - TC_INSTANCE_OFFSET;
   if (enable)
   {
-
-    /* Register callback function */
-    _callback[cb_type] = callback_func;
-
     /* Set the bit corresponding to the callback_type */
     if (cb_type == TC_CALLBACK_CC_CHANNEL0)
     {
-      _register_callback_mask |= TC_INTFLAG_MC(1);
+      _register_callback_mask |= (uint32_t)TC_INTFLAG_MC(1) << (instance*TC_CALLBACK_BITS);
+      _enable_callback_mask |= (uint32_t)TC_INTFLAG_MC(1) << (instance*TC_CALLBACK_BITS);
+      __cb[4 + (instance*TC_CALLBACK_BITS)] = callback_func;
     }
     else if (cb_type == TC_CALLBACK_CC_CHANNEL1)
     {
-      _register_callback_mask |= TC_INTFLAG_MC(2);
+      _register_callback_mask |= (uint32_t)TC_INTFLAG_MC(2) << (instance*TC_CALLBACK_BITS);
+      _enable_callback_mask |= (uint32_t)TC_INTFLAG_MC(2) << (instance*TC_CALLBACK_BITS);
+      __cb[5 + (instance*TC_CALLBACK_BITS)] = callback_func;
     }
     else
     {
-      _register_callback_mask |= (1 << cb_type);
+      _register_callback_mask |= (1UL << cb_type) << (instance*TC_CALLBACK_BITS);
+      _enable_callback_mask |= (1UL << cb_type) << (instance*TC_CALLBACK_BITS);
+      __cb[cb_type + (instance*TC_CALLBACK_BITS)] = callback_func;
     }
 
-    //TODO: enable interrupt
+    IRQn_Type _irqs[] = { TC3_IRQn, TC4_IRQn, TC5_IRQn };
+    NVIC_ClearPendingIRQ(_irqs[instance]);
+    NVIC_EnableIRQ(_irqs[instance]);
 
     /* Enable callback */
     if (cb_type == TC_CALLBACK_CC_CHANNEL0)
     {
-      _enable_callback_mask |= TC_INTFLAG_MC(1);
       _hw->COUNT8.INTENSET.reg = TC_INTFLAG_MC(1);
     }
     else if (cb_type == TC_CALLBACK_CC_CHANNEL1)
     {
-      _enable_callback_mask |= TC_INTFLAG_MC(2);
       _hw->COUNT8.INTENSET.reg = TC_INTFLAG_MC(2);
     }
     else
     {
-      _enable_callback_mask |= (1 << cb_type);
-      _hw->COUNT8.INTENSET.reg = (1 << cb_type);
+      _hw->COUNT8.INTENSET.reg = (1UL << cb_type);
     }
   }
   else
   {
-
     /* Disable callback */
     if (cb_type == TC_CALLBACK_CC_CHANNEL0)
     {
       _hw->COUNT8.INTENCLR.reg = TC_INTFLAG_MC(1);
-      _enable_callback_mask &= ~TC_INTFLAG_MC(1);
+      _enable_callback_mask &= ~((uint32_t)(TC_INTFLAG_MC(1)) << (instance*TC_CALLBACK_BITS));
     }
     else if (cb_type == TC_CALLBACK_CC_CHANNEL1)
     {
       _hw->COUNT8.INTENCLR.reg = TC_INTFLAG_MC(2);
-      _enable_callback_mask &= ~TC_INTFLAG_MC(2);
+      _enable_callback_mask &= ~((uint32_t)(TC_INTFLAG_MC(2)) << (instance*TC_CALLBACK_BITS));
     }
     else
     {
-      _hw->COUNT8.INTENCLR.reg = (1 << cb_type);
-      _enable_callback_mask &= ~(1 << cb_type);
+      _hw->COUNT8.INTENCLR.reg = (1UL << cb_type);
+      _enable_callback_mask &= ~((1UL << cb_type) << (instance*TC_CALLBACK_BITS));
     }
   }
 }
@@ -479,10 +484,7 @@ void Adafruit_ZeroTimer::setCompare(uint8_t channum, uint32_t compare)
   }
 
   // set it live
-  while (tc_is_syncing(_hw))
-  {
-    /* Wait for sync */
-  }
+  while (tc_is_syncing(_hw));
 
   /* Read out based on the TC counter size */
   switch (_counter_size)
@@ -505,16 +507,14 @@ void Adafruit_ZeroTimer::enable(boolean en)
 {
   if (en)
   {
-    while (tc_is_syncing(_hw))
-      ;
+    while (tc_is_syncing(_hw));
 
     /* Enable TC module */
     _hw->COUNT8.CTRLA.reg |= TC_CTRLA_ENABLE;
   }
   else
   {
-    while (tc_is_syncing(_hw))
-      ;
+    while (tc_is_syncing(_hw));
     /* Disbale interrupt */
     _hw->COUNT8.INTENCLR.reg = TC_INTENCLR_MASK;
     /* Clear interrupt flag */
@@ -524,3 +524,37 @@ void Adafruit_ZeroTimer::enable(boolean en)
     _hw->COUNT8.CTRLA.reg &= ~TC_CTRLA_ENABLE;
   }
 }
+
+//TODO: this could probably be optimized to be faster
+static void __tc_cb_handler(uint32_t mask, uint32_t offset){
+  mask = mask << offset;
+  for(int i=offset; i < offset+TC_CALLBACK_BITS; i++){
+    if(!mask) break;
+    uint32_t _active_cb = (1UL << i);
+    if( (mask & _active_cb) && (_enable_callback_mask & _active_cb) 
+        && (_register_callback_mask & _active_cb)){
+      __cb[i](); //call the callback
+    }
+    mask &= ~_active_cb;
+  }
+}
+
+extern "C" {
+void TC3_Handler(void){
+  uint32_t mask = TC3->COUNT8.INTFLAG.reg;
+  __tc_cb_handler(mask, 0);
+  TC3->COUNT8.INTFLAG.reg = 0b00111011; //clear
+}
+
+void TC4_Handler(void){
+  uint32_t mask = TC4->COUNT8.INTFLAG.reg;
+  __tc_cb_handler(mask, TC_CALLBACK_BITS);
+  TC4->COUNT8.INTFLAG.reg = 0b00111011; //clear
+}
+
+void TC5_Handler(void){
+  uint32_t mask = TC4->COUNT8.INTFLAG.reg;
+  __tc_cb_handler(mask, TC_CALLBACK_BITS*2);
+  TC5->COUNT8.INTFLAG.reg = 0b00111011; //clear
+}
+};
