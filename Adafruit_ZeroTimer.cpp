@@ -8,11 +8,7 @@
 #endif
 
 #ifndef TC_INSTANCE_OFFSET
-#if defined(__SAMD51__)
 #define TC_INSTANCE_OFFSET 3
-#else
-#define TC_INSTANCE_OFFSET 3
-#endif
 #endif
 
 extern "C" {
@@ -29,7 +25,11 @@ static uint32_t _enable_callback_mask = 0;
 
 static inline bool tc_is_syncing(Tc *const hw)
 {
+#if defined(__SAMD51__)
+  return hw->COUNT8.SYNCBUSY.reg > 0;
+#else
   return (hw->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY);
+#endif
 }
 
 Adafruit_ZeroTimer::Adafruit_ZeroTimer(uint8_t timernum)
@@ -51,10 +51,15 @@ bool Adafruit_ZeroTimer::tc_init()
   /* Temporary variable to hold TC instance number */
   uint8_t instance = _timernum - TC_INSTANCE_OFFSET;
 
+#if defined(__SAMD51__)
+/* Array of GLCK ID for different TC instances */
+  uint32_t inst_gclk_id[] = { TC3_GCLK_ID, TC4_GCLK_ID, TC5_GCLK_ID };
+ #else
   /* Array of GLCK ID for different TC instances */
   uint32_t inst_gclk_id[] = {GCLK_CLKCTRL_ID(GCM_TCC2_TC3), GCLK_CLKCTRL_ID(GCM_TC4_TC5), GCLK_CLKCTRL_ID(GCM_TC4_TC5)};
   /* Array of PM APBC mask bit position for different TC instances */
   uint32_t inst_pm_apbmask[] = {PM_APBCMASK_TC3, PM_APBCMASK_TC4, PM_APBCMASK_TC5};
+#endif
 
   /* Initialize parameters */
   uint32_t cbmask = 0;
@@ -106,6 +111,9 @@ bool Adafruit_ZeroTimer::tc_init()
     pinPeripheral(_pwm_channel[1].pin_out, (EPioType)_pwm_channel[1].pin_mux);
   }
 
+#if defined(__SAMD51__)
+	GCLK->PCHCTRL[inst_gclk_id[instance]].reg = GCLK_PCHCTRL_GEN_GCLK1_Val | (1 << GCLK_PCHCTRL_CHEN_Pos); //use clock generator 0
+#else
   /* Enable the user interface clock in the PM */
   PM->APBCMASK.reg |= inst_pm_apbmask[instance];
 
@@ -119,16 +127,24 @@ bool Adafruit_ZeroTimer::tc_init()
   /* Setup clock for module */
   GCLK->CLKCTRL.reg = (uint16_t)(GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN_GCLK0 | inst_gclk_id[instance]);
   while (GCLK->STATUS.bit.SYNCBUSY == 1);
+#endif
 
   /* Set ctrla register */
   ctrla_tmp =
       (uint32_t)_counter_size |
+#ifndef __SAMD51__
       (uint32_t)_wave_generation |
+#endif
       (uint32_t)_clock_prescaler;
 
   /* Write configuration to register */
   while (tc_is_syncing(_hw));
   _hw->COUNT8.CTRLA.reg = ctrla_tmp;
+
+#if defined(__SAMD51__)
+  while (tc_is_syncing(_hw));
+  _hw->COUNT8.WAVE.reg = _wave_generation;
+#endif
 
   if (_count_direction)
   {
@@ -152,7 +168,11 @@ bool Adafruit_ZeroTimer::tc_init()
 
   /* Write configuration to register */
   while (tc_is_syncing(_hw));
+#if defined(__SAMD51__)
+  _hw->COUNT8.DRVCTRL.reg = ctrlc_tmp;
+#else
   _hw->COUNT8.CTRLC.reg = ctrlc_tmp;
+#endif
 
   /* Write configuration to register */
   while (tc_is_syncing(_hw));
@@ -237,6 +257,73 @@ boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
     uint32_t pinout = 0xFFFF;
     uint32_t pinmux = 0xFFFF;
 
+#if defined(__SAMD51__)
+    if (_timernum == 3){
+      if (channum == 0){
+        if (pin == 10){
+          pinout = PIN_PA18E_TC3_WO0;
+          pinmux = MUX_PA18E_TC3_WO0;
+        }
+        if (pin == MISO){
+          pinout = PIN_PA14E_TC3_WO0;
+          pinmux = MUX_PA14E_TC3_WO0;
+        }
+      }
+      if (channum == 1){
+        if (pin == 11){
+          pinout = PIN_PA19E_TC3_WO1;
+          pinmux = MUX_PA19E_TC3_WO1;
+        }
+      }
+    }
+
+    if (_timernum == 4){
+      if (channum == 0){
+        if (pin == A4){
+          pinout = PIN_PB08E_TC4_WO0;
+          pinmux = MUX_PB08E_TC4_WO0;
+        }
+        if (pin == 7){
+          pinout = PIN_PB12E_TC4_WO0;
+          pinmux = MUX_PB12E_TC4_WO0;
+        }
+        if (pin == 1){
+          pinout = PIN_PA22E_TC4_WO0;
+          pinmux = MUX_PA22E_TC4_WO0;
+        }
+      }
+      if (channum == 1){
+        if (pin == A5){
+          pinout = PIN_PB09E_TC4_WO1;
+          pinmux = MUX_PB09E_TC4_WO1;
+        }
+        if (pin == 4){
+          pinout = PIN_PB13E_TC4_WO1;
+          pinmux = MUX_PB13E_TC4_WO1;
+        }
+        if (pin == 0){
+          pinout = PIN_PA23E_TC4_WO1;
+          pinmux = MUX_PA23E_TC4_WO1;
+        }
+      }
+    }
+
+    if (_timernum == 5){
+      if (channum == 0){
+        if (pin == 5){
+          pinout = PIN_PB14E_TC5_WO0;
+          pinmux = MUX_PB14E_TC5_WO0;
+        }
+
+      }
+      if (channum == 1){
+        if (pin == 6){
+          pinout = PIN_PB15E_TC5_WO1;
+          pinmux = MUX_PB15E_TC5_WO1;
+        }
+      }
+    }
+#else
     if (_timernum == 3)
     {
       if (channum == 0)
@@ -326,6 +413,7 @@ boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
         // only other option is D+, skip it!
       }
     }
+#endif
 
     if (pinout == 0xFFFF)
       return false;
@@ -336,7 +424,11 @@ boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
   }
 
   // re-init
+#if defined(__SAMD51__)
+  _hw = tc_modules[_timernum];
+#else
   _hw = tc_modules[_timernum - TC_INSTANCE_OFFSET];
+#endif
   return tc_init();
 }
 
@@ -378,7 +470,11 @@ void Adafruit_ZeroTimer::configure(tc_clock_prescaler prescale, tc_counter_size 
   _wave_generation = wavegen;
   _count_direction = countdir;
 
+#if defined(__SAMD51__)
+  _hw = tc_modules[_timernum];
+#else
   _hw = tc_modules[_timernum - TC_INSTANCE_OFFSET];
+#endif
   tc_init();
 }
 

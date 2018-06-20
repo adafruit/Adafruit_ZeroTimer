@@ -40,6 +40,14 @@ enum tc_counter_size {
 	TC_COUNTER_SIZE_32BIT               = TC_CTRLA_MODE_COUNT32,
 };
 
+#if defined(__SAMD51__)
+  enum tc_wave_generation {
+    TC_WAVE_GENERATION_NORMAL_FREQ      = TC_WAVE_WAVEGEN_NFRQ,
+    TC_WAVE_GENERATION_MATCH_FREQ       = TC_WAVE_WAVEGEN_MFRQ,
+    TC_WAVE_GENERATION_NORMAL_PWM       = TC_WAVE_WAVEGEN_NPWM,
+    TC_WAVE_GENERATION_MATCH_PWM        = TC_WAVE_WAVEGEN_MPWM,
+  };
+#else
 enum tc_wave_generation {
 	/** Top is maximum, except in 8-bit counter size where it is the PER
 	 * register
@@ -61,6 +69,7 @@ enum tc_wave_generation {
 	 */
 	TC_WAVE_GENERATION_MATCH_PWM        = TC_CTRLA_WAVEGEN_MPWM,
 };
+#endif
 
 enum tc_count_direction {
   TC_COUNT_DIRECTION_UP = 0,
