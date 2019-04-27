@@ -1,4 +1,6 @@
 #include "Arduino.h"
+#ifndef _ADAFRUIT_ZEROTIMER_
+#define _ADAFRUIT_ZEROTIMER_
 
 enum tc_clock_prescaler {
 	/** Divide clock by 1 */
@@ -142,3 +144,4 @@ class Adafruit_ZeroTimer {
   bool tc_init();
 
 };
+#endif // once
