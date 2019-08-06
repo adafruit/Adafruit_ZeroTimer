@@ -53,7 +53,12 @@ bool Adafruit_ZeroTimer::tc_init()
 
 #if defined(__SAMD51__)
 /* Array of GLCK ID for different TC instances */
-  uint32_t inst_gclk_id[] = { TC3_GCLK_ID, TC4_GCLK_ID, TC5_GCLK_ID };
+
+  uint32_t inst_gclk_id[] = { TC3_GCLK_ID, 
+#ifdef TC4_GCLK_ID
+			      TC4_GCLK_ID, TC5_GCLK_ID 
+#endif
+};
  #else
   /* Array of GLCK ID for different TC instances */
   uint32_t inst_gclk_id[] = {GCLK_CLKCTRL_ID(GCM_TCC2_TC3), GCLK_CLKCTRL_ID(GCM_TC4_TC5), GCLK_CLKCTRL_ID(GCM_TC4_TC5)};
@@ -276,7 +281,7 @@ boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
         }
       }
     }
-
+#if defined(TC4_GCLK_ID)
     if (_timernum == 4){
       if (channum == 0){
         if (pin == A4){
@@ -307,7 +312,8 @@ boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
         }
       }
     }
-
+#endif
+#if defined(TC5_GCLK_ID)
     if (_timernum == 5){
       if (channum == 0){
         if (pin == 5){
@@ -323,6 +329,7 @@ boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
         }
       }
     }
+#endif
 #else
     if (_timernum == 3)
     {
@@ -525,7 +532,11 @@ void Adafruit_ZeroTimer::setCallback(boolean enable, tc_callback cb_type, void (
       __cb[cb_type + (instance*TC_CALLBACK_BITS)] = callback_func;
     }
 
-    IRQn_Type _irqs[] = { TC3_IRQn, TC4_IRQn, TC5_IRQn };
+    IRQn_Type _irqs[] = { TC3_IRQn, 
+#if defined(TC4_IRQn)
+			  TC4_IRQn, TC5_IRQn 
+#endif
+};
     NVIC_ClearPendingIRQ(_irqs[instance]);
     NVIC_EnableIRQ(_irqs[instance]);
 
@@ -651,16 +662,20 @@ void Adafruit_ZeroTimer::timerHandler(uint8_t timerNum){
       __tc_cb_handler(mask, 0);
       TC3->COUNT8.INTFLAG.reg = 0b00111011; //clear
       break;
+#if defined(TC4_GCLK_ID)
     case 4:
       mask = TC4->COUNT8.INTFLAG.reg;
       __tc_cb_handler(mask, TC_CALLBACK_BITS);
       TC4->COUNT8.INTFLAG.reg = 0b00111011; //clear
       break;
+#endif
+#if defined(TC5_GCLK_ID)
     case 5:
       mask = TC5->COUNT8.INTFLAG.reg;
       __tc_cb_handler(mask, TC_CALLBACK_BITS*2);
       TC5->COUNT8.INTFLAG.reg = 0b00111011; //clear
       break;
+#endif
   }
 }
 
