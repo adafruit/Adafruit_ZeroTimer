@@ -55,11 +55,11 @@ bool Adafruit_ZeroTimer::tc_init()
 /* Array of GLCK ID for different TC instances */
 
   uint32_t inst_gclk_id[] = { TC3_GCLK_ID, 
-#ifdef TC4_GCLK_ID
+#if defined(TC4_GCLK_ID)
 			      TC4_GCLK_ID, TC5_GCLK_ID 
 #endif
-};
- #else
+                            };
+#else  // SAMD21
   /* Array of GLCK ID for different TC instances */
   uint32_t inst_gclk_id[] = {GCLK_CLKCTRL_ID(GCM_TCC2_TC3), GCLK_CLKCTRL_ID(GCM_TC4_TC5), GCLK_CLKCTRL_ID(GCM_TC4_TC5)};
   /* Array of PM APBC mask bit position for different TC instances */
@@ -281,7 +281,7 @@ boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
         }
       }
     }
-#if defined(TC4_GCLK_ID)
+   #if defined(TC4_GCLK_ID)
     if (_timernum == 4){
       if (channum == 0){
         if (pin == A4){
@@ -312,8 +312,8 @@ boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
         }
       }
     }
-#endif
-#if defined(TC5_GCLK_ID)
+  #endif  // TC4
+  #if defined(TC5_GCLK_ID)
     if (_timernum == 5){
       if (channum == 0){
         if (pin == 5){
@@ -329,8 +329,8 @@ boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
         }
       }
     }
-#endif
-#else
+  #endif  // TC5
+#else // SAMD21
     if (_timernum == 3)
     {
       if (channum == 0)
@@ -370,13 +370,13 @@ boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
           pinout = PIN_PA22E_TC4_WO0;
           pinmux = MUX_PA22E_TC4_WO0;
         }
-#if defined(__SAMD21G18A__)
+  #if defined(__SAMD21G18A__)
         if (pin == A1)
         {
           pinout = PIN_PB08E_TC4_WO0;
           pinmux = MUX_PB08E_TC4_WO0;
         }
-#endif
+  #endif
       }
       if (channum == 1)
       {
@@ -385,13 +385,13 @@ boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
           pinout = PIN_PA23E_TC4_WO1;
           pinmux = MUX_PA23E_TC4_WO1;
         }
-#if defined(__SAMD21G18A__)
+  #if defined(__SAMD21G18A__)
         if (pin == A2)
         {
           pinout = PIN_PB09E_TC4_WO1;
           pinmux = MUX_PB09E_TC4_WO1;
         }
-#endif
+  #endif
       }
     }
 
@@ -399,24 +399,24 @@ boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
     {
       if (channum == 0)
       {
-#if defined(__SAMD21G18A__)
+  #if defined(__SAMD21G18A__)
         if (pin == MOSI)
         {
           pinout = PIN_PB10E_TC5_WO0;
           pinmux = MUX_PB10E_TC5_WO0;
         }
-#endif
+  #endif
         // only other option is D-, skip it!
       }
       if (channum == 1)
       {
-#if defined(__SAMD21G18A__)
+  #if defined(__SAMD21G18A__)
         if (pin == SCK)
         {
           pinout = PIN_PB11E_TC5_WO1;
           pinmux = MUX_PB11E_TC5_WO1;
         }
-#endif
+  #endif
         // only other option is D+, skip it!
       }
     }
@@ -533,9 +533,9 @@ void Adafruit_ZeroTimer::setCallback(boolean enable, tc_callback cb_type, void (
     }
 
     IRQn_Type _irqs[] = { TC3_IRQn, 
-#if defined(TC4_IRQn)
+  #if defined(TC4_GCLK_ID)
 			  TC4_IRQn, TC5_IRQn 
-#endif
+  #endif
 };
     NVIC_ClearPendingIRQ(_irqs[instance]);
     NVIC_EnableIRQ(_irqs[instance]);
