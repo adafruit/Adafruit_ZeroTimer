@@ -31,7 +31,8 @@ void setup() {
   
   Serial.println("Timer callback tester");
 
-  Serial.printf("Desired freq: %d Hz\n", freq);
+  Serial.print("Desired freq (Hz):");
+  Serial.println(freq);
 
   // Set up the flexible divider/compare
   uint8_t divider  = 1;
@@ -74,9 +75,10 @@ void setup() {
     Serial.println("Invalid frequency");
     while (1) delay(10);
   }
-  Serial.printf("Divider %d / compare %d -> Final %d Hz\n", 
-         divider, compare, (48000000/compare));
-  
+  Serial.print("Divider:"); Serial.println(divider);
+  Serial.print("Compare:"); Serial.println(compare);
+  Serial.print("Final freq:"); Serial.println((int)(48000000/compare));
+
   zerotimer.enable(false);
   zerotimer.configure(prescaler,       // prescaler
           TC_COUNTER_SIZE_16BIT,       // bit width of timer/counter
