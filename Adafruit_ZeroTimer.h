@@ -105,41 +105,41 @@ class Adafruit_ZeroTimer {
 
   static void timerHandler(uint8_t timerNum);
  protected:
-  uint8_t _timernum;
+  uint8_t _timernum;                                    ///< Which TC this is, 3 for TC3, 4 for TC4, etc
 
-  Tc *_hw;
+  Tc *_hw;                                              ///< Pointer to the timer we're wrappering
 
-  tc_clock_prescaler _clock_prescaler;
-  tc_counter_size _counter_size;
-  tc_wave_generation _wave_generation;
-  uint8_t _waveform_invert_output;
-  tc_count_direction _count_direction;
+  tc_clock_prescaler _clock_prescaler;                  ///< Prescale divider from timer clock source
+  tc_counter_size _counter_size;                        ///< 8, 16 or 32 bit counter size?
+  tc_wave_generation _wave_generation;                  ///< What sort of waveform we'll be creating
+  uint8_t _waveform_invert_output;                      ///< Should we invert the output?
+  tc_count_direction _count_direction;                  ///< Which way the counter goes, up or down
 
   struct counter_8_bit {
-    uint8_t compare_capture_channel[NUM_CC_CHANNELS];
-    uint8_t period;
-    uint8_t value;
+    uint8_t compare_capture_channel[NUM_CC_CHANNELS];   ///< The compare values for each of the channels for the timer
+    uint8_t period;                                     ///< The period/top value for this timer
+    uint8_t value;                                      ///< The count value
   };
-  counter_8_bit _counter_8_bit;
+  counter_8_bit _counter_8_bit;  ///< Stats for when we have the counter configed for 8 bit operation
 
   struct counter_16_bit {
-    uint16_t compare_capture_channel[NUM_CC_CHANNELS];
-    uint16_t value;
+    uint16_t compare_capture_channel[NUM_CC_CHANNELS];   ///< The compare values for each of the channels for the timer
+    uint16_t value;                                      ///< The count value
   };
-  counter_16_bit _counter_16_bit;
+  counter_16_bit _counter_16_bit;  ///< Stats for when we have the counter configed for 16 bit operation
 
   struct counter_32_bit {
-    uint32_t compare_capture_channel[NUM_CC_CHANNELS];
-    uint32_t value;
+    uint32_t compare_capture_channel[NUM_CC_CHANNELS];   ///< The compare values for each of the channels for the timer
+    uint32_t value;                                      ///< The count value
   };
-  counter_32_bit _counter_32_bit;
+  counter_32_bit _counter_32_bit;  ///< Stats for when we have the counter configed for 32 bit operation
 
   struct pwm_channel {
-    bool enabled;
-    uint32_t pin_mux;
-    uint32_t pin_out;
+    bool enabled;      ///< Whether its activated
+    uint32_t pin_mux;  ///< The direct chip muxing used for this PWM output
+    uint32_t pin_out;  ///< The direct chip pad name used for this PWM output
   };
-  pwm_channel _pwm_channel[NUM_PWM_CHANNELS];
+  pwm_channel _pwm_channel[NUM_PWM_CHANNELS]; ///< status of the 2 PWM channels per timer
 
   bool tc_init();
 
