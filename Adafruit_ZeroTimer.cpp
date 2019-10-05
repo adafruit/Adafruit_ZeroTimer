@@ -32,11 +32,24 @@ static inline bool tc_is_syncing(Tc *const hw)
 #endif
 }
 
+/**************************************************************************/
+/*!
+    @brief  Instantiate a ZeroTimer class
+    @param  timernum The timer we are wrapping, 3 for TC3, 4 for TC4, etc!
+*/
+/**************************************************************************/
 Adafruit_ZeroTimer::Adafruit_ZeroTimer(uint8_t timernum)
 {
   _timernum = timernum;
 }
 
+
+/**************************************************************************/
+/*!
+    @brief  Initializer for timer counter object
+    @return True if we were able to init the timer, False on any failure
+*/
+/**************************************************************************/
 bool Adafruit_ZeroTimer::tc_init()
 {
   /* Temporary variable to hold all updates to the CTRLA
@@ -246,6 +259,17 @@ bool Adafruit_ZeroTimer::tc_init()
   return false;
 }
 
+/**************************************************************************/
+/*!
+    @brief  Use the TC to output a PWM signal on a given pin. Check datasheet
+    to verify what pins can be connected to which TC output and what channel
+    to use.
+    @param pwmout True to enable the output, False to disable
+    @param channum Which channel, 0 or 1, we want to output on.
+    @param pin The Arduino pin name we want to have the PWM output on
+    @returns True on success
+*/
+/**************************************************************************/
 boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
 {
   Tc *const tc_modules[TC_INST_NUM] = TC_INSTS;
@@ -439,6 +463,12 @@ boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum, uint8_t pin)
   return tc_init();
 }
 
+/**************************************************************************/
+/*!
+    @brief Whether or not to invert the output PWM
+    @param invert True to invert, False to use default
+*/
+/**************************************************************************/
 void Adafruit_ZeroTimer::invertWave(uint8_t invert)
 {
   _waveform_invert_output = invert;
@@ -446,6 +476,15 @@ void Adafruit_ZeroTimer::invertWave(uint8_t invert)
   tc_init();
 }
 
+/**************************************************************************/
+/*!
+    @brief Configure how we want to use the timer, based on ASF constants
+    @param prescale What divider we want, e.g. TC_CLOCK_PRESCALER_DIV16 see https://asf.microchip.com/docs/latest/thirdparty.wireless.avr2130_lwmesh.apps.wsndemo.saml21_xpro_b_rf233/html/group__asfdoc__sam0__tc__group.html#ga98aed17b995157e67b9322a45f0ed5f4
+    @param countersize Can be TC_COUNTER_SIZE_8BIT, TC_COUNTER_SIZE_16BIT or TC_COUNTER_SIZE_32BIT 
+    @param wavegen Can be TC_WAVE_WAVEGEN_NFRQ, TC_WAVE_WAVEGEN_MFRQ, TC_WAVE_WAVEGEN_NPWM or TC_WAVE_WAVEGEN_MPWM
+    @param countdir Can be TC_COUNT_DIRECTION_UP or TC_COUNT_DIRECTION_DOWN
+*/
+/**************************************************************************/
 void Adafruit_ZeroTimer::configure(tc_clock_prescaler prescale, tc_counter_size countersize, tc_wave_generation wavegen, tc_count_direction countdir)
 {
   Tc *const tc_modules[TC_INST_NUM] = TC_INSTS;
@@ -485,6 +524,14 @@ void Adafruit_ZeroTimer::configure(tc_clock_prescaler prescale, tc_counter_size 
   tc_init();
 }
 
+/**************************************************************************/
+/*!
+    @brief Set up channel 0 of the timer for the 'top' or period setting value, and channel 1 for the 'compare' value
+    @param period The period register value to use (you'll need to calculate this from the frequency desired)
+    @param match The compare value, should be less than the period, determines the duty cycle
+    @param channum Only for 8-bit counter mod, we can have the period set and *two* channel outputs
+*/
+/**************************************************************************/
 void Adafruit_ZeroTimer::setPeriodMatch(uint32_t period, uint32_t match, uint8_t channum)
 {
   if (_counter_size == TC_COUNTER_SIZE_8BIT)
@@ -506,6 +553,14 @@ void Adafruit_ZeroTimer::setPeriodMatch(uint32_t period, uint32_t match, uint8_t
   }
 }
 
+/**************************************************************************/
+/*!
+    @brief Have a function called whenever the timer interrupt goes off
+    @param enable True to enable the callback, False to disable
+    @param cb_type Which channel to use, can be TC_CALLBACK_CC_CHANNEL0 or TC_CALLBACK_CC_CHANNEL1
+    @param callback_func A function with no params or return, that will be called
+*/
+/**************************************************************************/
 void Adafruit_ZeroTimer::setCallback(boolean enable, tc_callback cb_type, void (*callback_func)(void))
 {
 
@@ -575,6 +630,14 @@ void Adafruit_ZeroTimer::setCallback(boolean enable, tc_callback cb_type, void (
   }
 }
 
+/**************************************************************************/
+/*!
+    @brief Set the timer counter's channel compare register to a value
+    @param channum Which channel to use, can be 0 or 1
+    @param compare The compare value to set the channel compare value to,
+    will be cast to whatever size the timer is setup for (8/16/32 bit)
+*/
+/**************************************************************************/
 void Adafruit_ZeroTimer::setCompare(uint8_t channum, uint32_t compare)
 {
   if (channum > 1)
@@ -614,6 +677,13 @@ void Adafruit_ZeroTimer::setCompare(uint8_t channum, uint32_t compare)
   }
 }
 
+/**************************************************************************/
+/*!
+    @brief  Enable or disable the timer. Won't do anything if the status is what
+            we desire already
+    @param  en True to enable, False to disable
+*/
+/**************************************************************************/
 void Adafruit_ZeroTimer::enable(boolean en)
 {
   // First, check if its enabled
@@ -661,7 +731,14 @@ static inline void __tc_cb_handler(uint32_t mask, uint32_t offset){
   }
 }
 
-
+/**************************************************************************/
+/*!
+    @brief  The function we call from within the IRQ function defined in the sketch.
+            We can't have all the IRQ functions in this library because then no other
+            library can use them. So we have a handler that the usercode must call.
+    @param timerNum The timer we just got an IRQ for, 3 for TC3, 4 for TC4, etc!
+*/
+/**************************************************************************/
 void Adafruit_ZeroTimer::timerHandler(uint8_t timerNum){
   uint32_t mask;
   switch(timerNum){

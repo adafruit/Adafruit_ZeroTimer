@@ -89,6 +89,12 @@ enum tc_callback {
 #define NUM_PWM_CHANNELS 2
 #define NUM_CC_CHANNELS 2
 
+/**************************************************************************/
+/*! 
+    @brief  Class that stores state and functions for 
+    interacting with SAMD21 or SAMD51 Timer Counter
+*/
+/**************************************************************************/
 class Adafruit_ZeroTimer {
  public:
   Adafruit_ZeroTimer(uint8_t tn);
@@ -99,7 +105,6 @@ class Adafruit_ZeroTimer {
 
   void configure(tc_clock_prescaler prescale, tc_counter_size countersize, tc_wave_generation wavegen, tc_count_direction countdir = TC_COUNT_DIRECTION_UP);
   void setCompare(uint8_t channum, uint32_t compare);
-  void setTop(uint32_t top);
   void invertWave(uint8_t invert);
   void setCallback(boolean enable, tc_callback cb_type, void(* callback_func) (void) = NULL);
 
@@ -119,26 +124,26 @@ class Adafruit_ZeroTimer {
     uint8_t compare_capture_channel[NUM_CC_CHANNELS];   ///< The compare values for each of the channels for the timer
     uint8_t period;                                     ///< The period/top value for this timer
     uint8_t value;                                      ///< The count value
-  };
+  };                             ///< Helper struct to hold state for 8-bit configured TC
   counter_8_bit _counter_8_bit;  ///< Stats for when we have the counter configed for 8 bit operation
 
   struct counter_16_bit {
     uint16_t compare_capture_channel[NUM_CC_CHANNELS];   ///< The compare values for each of the channels for the timer
     uint16_t value;                                      ///< The count value
-  };
+  };                               ///< Helper struct to hold state for 16-bit configured TC
   counter_16_bit _counter_16_bit;  ///< Stats for when we have the counter configed for 16 bit operation
 
   struct counter_32_bit {
     uint32_t compare_capture_channel[NUM_CC_CHANNELS];   ///< The compare values for each of the channels for the timer
     uint32_t value;                                      ///< The count value
-  };
+  };                               ///< Helper struct to hold state for 32-bit configured TC
   counter_32_bit _counter_32_bit;  ///< Stats for when we have the counter configed for 32 bit operation
 
   struct pwm_channel {
     bool enabled;      ///< Whether its activated
     uint32_t pin_mux;  ///< The direct chip muxing used for this PWM output
     uint32_t pin_out;  ///< The direct chip pad name used for this PWM output
-  };
+  };                   ///< Helper struct to hold state for a PWM output channel
   pwm_channel _pwm_channel[NUM_PWM_CHANNELS]; ///< status of the 2 PWM channels per timer
 
   bool tc_init();
