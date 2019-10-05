@@ -616,17 +616,25 @@ void Adafruit_ZeroTimer::setCompare(uint8_t channum, uint32_t compare)
 
 void Adafruit_ZeroTimer::enable(boolean en)
 {
-  if (en)
-  {
+  // First, check if its enabled
+#if defined(__SAMD51__)
+  while (_hw->COUNT8.SYNCBUSY.bit.ENABLE);
+#else
+  while (tc_is_syncing(_hw));
+#endif
+  bool enabled =_hw->COUNT8.CTRLA.bit.ENABLE;
+
+  if (!enabled && en) {
     while (tc_is_syncing(_hw));
 
     /* Enable TC module */
     _hw->COUNT8.CTRLA.reg |= TC_CTRLA_ENABLE;
+    return;
   }
-  else
-  {
+
+  if (enabled && !en) {
     while (tc_is_syncing(_hw));
-    /* Disbale interrupt */
+    /* Disable interrupt */
     _hw->COUNT8.INTENCLR.reg = TC_INTENCLR_MASK;
     /* Clear interrupt flag */
     _hw->COUNT8.INTFLAG.reg = TC_INTFLAG_MASK;
