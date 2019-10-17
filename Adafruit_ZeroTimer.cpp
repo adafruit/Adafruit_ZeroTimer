@@ -563,6 +563,7 @@ void Adafruit_ZeroTimer::setPeriodMatch(uint32_t period, uint32_t match, uint8_t
 /**************************************************************************/
 void Adafruit_ZeroTimer::setCallback(boolean enable, tc_callback cb_type, void (*callback_func)(void))
 {
+  if(callback_func == NULL) return;
 
   uint8_t instance = _timernum - TC_INSTANCE_OFFSET;
   if (enable)
