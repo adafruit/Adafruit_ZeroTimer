@@ -104,7 +104,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a71ee38df7f0824c3e2775d3cb1a07440"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#a71ee38df7f0824c3e2775d3cb1a07440">enable</a> (boolean en)</td></tr>
 <tr class="memdesc:a71ee38df7f0824c3e2775d3cb1a07440"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable the timer. Won't do anything if the status is what we desire already.  <a href="#a71ee38df7f0824c3e2775d3cb1a07440">More...</a><br /></td></tr>
 <tr class="separator:a71ee38df7f0824c3e2775d3cb1a07440"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0aea9f9abe9c0c736680dfceaaa13c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#ac0aea9f9abe9c0c736680dfceaaa13c7">configure</a> (tc_clock_prescaler prescale, tc_counter_size countersize, tc_wave_generation wavegen, tc_count_direction countdir=TC_COUNT_DIRECTION_UP)</td></tr>
+<tr class="memitem:ac0aea9f9abe9c0c736680dfceaaa13c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#ac0aea9f9abe9c0c736680dfceaaa13c7">configure</a> (<a class="el" href="_adafruit___zero_timer_8h.html#a98aed17b995157e67b9322a45f0ed5f4">tc_clock_prescaler</a> prescale, <a class="el" href="_adafruit___zero_timer_8h.html#a1b112627b81227c49c16b1a93e3321a0">tc_counter_size</a> countersize, <a class="el" href="_adafruit___zero_timer_8h.html#ae7f1302b7e3d675e471a554668b49d64">tc_wave_generation</a> wavegen, <a class="el" href="_adafruit___zero_timer_8h.html#a28777c47943dfb2b5de0fd7ae14eac1f">tc_count_direction</a> countdir=TC_COUNT_DIRECTION_UP)</td></tr>
 <tr class="memdesc:ac0aea9f9abe9c0c736680dfceaaa13c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure how we want to use the timer, based on ASF constants.  <a href="#ac0aea9f9abe9c0c736680dfceaaa13c7">More...</a><br /></td></tr>
 <tr class="separator:ac0aea9f9abe9c0c736680dfceaaa13c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c8430e9111d6c43900743103fd56b32"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#a6c8430e9111d6c43900743103fd56b32">setCompare</a> (uint8_t channum, uint32_t compare)</td></tr>
@@ -113,7 +113,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3128e35aaf4dcf8bfd19facbf164784c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#a3128e35aaf4dcf8bfd19facbf164784c">invertWave</a> (uint8_t invert)</td></tr>
 <tr class="memdesc:a3128e35aaf4dcf8bfd19facbf164784c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether or not to invert the output PWM.  <a href="#a3128e35aaf4dcf8bfd19facbf164784c">More...</a><br /></td></tr>
 <tr class="separator:a3128e35aaf4dcf8bfd19facbf164784c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:accd422cc0d6dc83814ec0357d58d07f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#accd422cc0d6dc83814ec0357d58d07f2">setCallback</a> (boolean <a class="el" href="class_adafruit___zero_timer.html#a71ee38df7f0824c3e2775d3cb1a07440">enable</a>, tc_callback cb_type, void(*callback_func)(void)=NULL)</td></tr>
+<tr class="memitem:accd422cc0d6dc83814ec0357d58d07f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#accd422cc0d6dc83814ec0357d58d07f2">setCallback</a> (boolean <a class="el" href="class_adafruit___zero_timer.html#a71ee38df7f0824c3e2775d3cb1a07440">enable</a>, <a class="el" href="_adafruit___zero_timer_8h.html#a7d3fb5365e46bd4efae2885bd508067f">tc_callback</a> cb_type, void(*callback_func)(void)=NULL)</td></tr>
 <tr class="memdesc:accd422cc0d6dc83814ec0357d58d07f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Have a function called whenever the timer interrupt goes off.  <a href="#accd422cc0d6dc83814ec0357d58d07f2">More...</a><br /></td></tr>
 <tr class="separator:accd422cc0d6dc83814ec0357d58d07f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -140,15 +140,15 @@ Tc *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:a41717a3a40dbfe798159de08c381b777"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to the timer we're wrappering. <br /></td></tr>
 <tr class="separator:a41717a3a40dbfe798159de08c381b777"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a370f59c9478cbad0c63d5e110aa00245"><td class="memItemLeft" align="right" valign="top"><a id="a370f59c9478cbad0c63d5e110aa00245"></a>
-tc_clock_prescaler&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#a370f59c9478cbad0c63d5e110aa00245">_clock_prescaler</a></td></tr>
+<a class="el" href="_adafruit___zero_timer_8h.html#a98aed17b995157e67b9322a45f0ed5f4">tc_clock_prescaler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#a370f59c9478cbad0c63d5e110aa00245">_clock_prescaler</a></td></tr>
 <tr class="memdesc:a370f59c9478cbad0c63d5e110aa00245"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prescale divider from timer clock source. <br /></td></tr>
 <tr class="separator:a370f59c9478cbad0c63d5e110aa00245"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7bb5bf52275c797132388ec45f17410"><td class="memItemLeft" align="right" valign="top"><a id="ad7bb5bf52275c797132388ec45f17410"></a>
-tc_counter_size&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#ad7bb5bf52275c797132388ec45f17410">_counter_size</a></td></tr>
+<a class="el" href="_adafruit___zero_timer_8h.html#a1b112627b81227c49c16b1a93e3321a0">tc_counter_size</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#ad7bb5bf52275c797132388ec45f17410">_counter_size</a></td></tr>
 <tr class="memdesc:ad7bb5bf52275c797132388ec45f17410"><td class="mdescLeft">&#160;</td><td class="mdescRight">8, 16 or 32 bit counter size? <br /></td></tr>
 <tr class="separator:ad7bb5bf52275c797132388ec45f17410"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49eb3514b2f4893ef9e1272e5a7853ec"><td class="memItemLeft" align="right" valign="top"><a id="a49eb3514b2f4893ef9e1272e5a7853ec"></a>
-tc_wave_generation&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#a49eb3514b2f4893ef9e1272e5a7853ec">_wave_generation</a></td></tr>
+<a class="el" href="_adafruit___zero_timer_8h.html#ae7f1302b7e3d675e471a554668b49d64">tc_wave_generation</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#a49eb3514b2f4893ef9e1272e5a7853ec">_wave_generation</a></td></tr>
 <tr class="memdesc:a49eb3514b2f4893ef9e1272e5a7853ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">What sort of waveform we'll be creating. <br /></td></tr>
 <tr class="separator:a49eb3514b2f4893ef9e1272e5a7853ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9c7e9c71fe1874624e133c2a02b17b3"><td class="memItemLeft" align="right" valign="top"><a id="ad9c7e9c71fe1874624e133c2a02b17b3"></a>
@@ -156,24 +156,16 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memdesc:ad9c7e9c71fe1874624e133c2a02b17b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should we invert the output? <br /></td></tr>
 <tr class="separator:ad9c7e9c71fe1874624e133c2a02b17b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a8ffc30406560ad72768e0a551f2d26"><td class="memItemLeft" align="right" valign="top"><a id="a1a8ffc30406560ad72768e0a551f2d26"></a>
-tc_count_direction&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#a1a8ffc30406560ad72768e0a551f2d26">_count_direction</a></td></tr>
+<a class="el" href="_adafruit___zero_timer_8h.html#a28777c47943dfb2b5de0fd7ae14eac1f">tc_count_direction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#a1a8ffc30406560ad72768e0a551f2d26">_count_direction</a></td></tr>
 <tr class="memdesc:a1a8ffc30406560ad72768e0a551f2d26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Which way the counter goes, up or down. <br /></td></tr>
 <tr class="separator:a1a8ffc30406560ad72768e0a551f2d26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41346c7e85592f0366004376b44aa9b3"><td class="memItemLeft" align="right" valign="top"><a id="a41346c7e85592f0366004376b44aa9b3"></a>
-<a class="el" href="struct_adafruit___zero_timer_1_1counter__8__bit.html">counter_8_bit</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#a41346c7e85592f0366004376b44aa9b3">_counter_8_bit</a></td></tr>
-<tr class="memdesc:a41346c7e85592f0366004376b44aa9b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stats for when we have the counter configed for 8 bit operation. <br /></td></tr>
+<tr class="memitem:a41346c7e85592f0366004376b44aa9b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_adafruit___zero_timer_1_1counter__8__bit.html">counter_8_bit</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#a41346c7e85592f0366004376b44aa9b3">_counter_8_bit</a></td></tr>
 <tr class="separator:a41346c7e85592f0366004376b44aa9b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44730bbc76261e6a87e8cd3cae9dd897"><td class="memItemLeft" align="right" valign="top"><a id="a44730bbc76261e6a87e8cd3cae9dd897"></a>
-<a class="el" href="struct_adafruit___zero_timer_1_1counter__16__bit.html">counter_16_bit</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#a44730bbc76261e6a87e8cd3cae9dd897">_counter_16_bit</a></td></tr>
-<tr class="memdesc:a44730bbc76261e6a87e8cd3cae9dd897"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stats for when we have the counter configed for 16 bit operation. <br /></td></tr>
+<tr class="memitem:a44730bbc76261e6a87e8cd3cae9dd897"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_adafruit___zero_timer_1_1counter__16__bit.html">counter_16_bit</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#a44730bbc76261e6a87e8cd3cae9dd897">_counter_16_bit</a></td></tr>
 <tr class="separator:a44730bbc76261e6a87e8cd3cae9dd897"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48a5216bb658c5478b8d610df604d505"><td class="memItemLeft" align="right" valign="top"><a id="a48a5216bb658c5478b8d610df604d505"></a>
-<a class="el" href="struct_adafruit___zero_timer_1_1counter__32__bit.html">counter_32_bit</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#a48a5216bb658c5478b8d610df604d505">_counter_32_bit</a></td></tr>
-<tr class="memdesc:a48a5216bb658c5478b8d610df604d505"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stats for when we have the counter configed for 32 bit operation. <br /></td></tr>
+<tr class="memitem:a48a5216bb658c5478b8d610df604d505"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_adafruit___zero_timer_1_1counter__32__bit.html">counter_32_bit</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#a48a5216bb658c5478b8d610df604d505">_counter_32_bit</a></td></tr>
 <tr class="separator:a48a5216bb658c5478b8d610df604d505"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa78dfefd1db5aa2fd9b0797e529985a3"><td class="memItemLeft" align="right" valign="top"><a id="aa78dfefd1db5aa2fd9b0797e529985a3"></a>
-<a class="el" href="struct_adafruit___zero_timer_1_1pwm__channel.html">pwm_channel</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#aa78dfefd1db5aa2fd9b0797e529985a3">_pwm_channel</a> [NUM_PWM_CHANNELS]</td></tr>
-<tr class="memdesc:aa78dfefd1db5aa2fd9b0797e529985a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">status of the 2 PWM channels per timer <br /></td></tr>
+<tr class="memitem:aa78dfefd1db5aa2fd9b0797e529985a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_adafruit___zero_timer_1_1pwm__channel.html">pwm_channel</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___zero_timer.html#aa78dfefd1db5aa2fd9b0797e529985a3">_pwm_channel</a> [<a class="el" href="_adafruit___zero_timer_8h.html#aa911e2dbc7cd820aad4976e29191c32a">NUM_PWM_CHANNELS</a>]</td></tr>
 <tr class="separator:aa78dfefd1db5aa2fd9b0797e529985a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -288,7 +280,7 @@ tc_count_direction&#160;</td><td class="memItemRight" valign="bottom"><a class="
   <table class="params">
     <tr><td class="paramname">period</td><td>The period register value to use (you'll need to calculate this from the frequency desired) </td></tr>
     <tr><td class="paramname">match</td><td>The compare value, should be less than the period, determines the duty cycle </td></tr>
-    <tr><td class="paramname">channum</td><td>Only for 8-bit counter mod, we can have the period set and <em>two</em> channel outputs </td></tr>
+    <tr><td class="paramname">channum</td><td>Only for 8-bit counter mod, we can have the period set and two* channel outputs </td></tr>
   </table>
   </dd>
 </dl>
@@ -330,25 +322,25 @@ tc_count_direction&#160;</td><td class="memItemRight" valign="bottom"><a class="
         <tr>
           <td class="memname">void Adafruit_ZeroTimer::configure </td>
           <td>(</td>
-          <td class="paramtype">tc_clock_prescaler&#160;</td>
+          <td class="paramtype"><a class="el" href="_adafruit___zero_timer_8h.html#a98aed17b995157e67b9322a45f0ed5f4">tc_clock_prescaler</a>&#160;</td>
           <td class="paramname"><em>prescale</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">tc_counter_size&#160;</td>
+          <td class="paramtype"><a class="el" href="_adafruit___zero_timer_8h.html#a1b112627b81227c49c16b1a93e3321a0">tc_counter_size</a>&#160;</td>
           <td class="paramname"><em>countersize</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">tc_wave_generation&#160;</td>
+          <td class="paramtype"><a class="el" href="_adafruit___zero_timer_8h.html#ae7f1302b7e3d675e471a554668b49d64">tc_wave_generation</a>&#160;</td>
           <td class="paramname"><em>wavegen</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">tc_count_direction&#160;</td>
+          <td class="paramtype"><a class="el" href="_adafruit___zero_timer_8h.html#a28777c47943dfb2b5de0fd7ae14eac1f">tc_count_direction</a>&#160;</td>
           <td class="paramname"><em>countdir</em> = <code>TC_COUNT_DIRECTION_UP</code>&#160;</td>
         </tr>
         <tr>
@@ -450,7 +442,7 @@ tc_count_direction&#160;</td><td class="memItemRight" valign="bottom"><a class="
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">tc_callback&#160;</td>
+          <td class="paramtype"><a class="el" href="_adafruit___zero_timer_8h.html#a7d3fb5365e46bd4efae2885bd508067f">tc_callback</a>&#160;</td>
           <td class="paramname"><em>cb_type</em>, </td>
         </tr>
         <tr>
@@ -541,9 +533,102 @@ tc_count_direction&#160;</td><td class="memItemRight" valign="bottom"><a class="
 
 </div>
 </div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a41346c7e85592f0366004376b44aa9b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41346c7e85592f0366004376b44aa9b3">&#9670;&nbsp;</a></span>_counter_8_bit</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_adafruit___zero_timer_1_1counter__8__bit.html">counter_8_bit</a> Adafruit_ZeroTimer::_counter_8_bit</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Stats for when we have the counter configed for 8 bit operation </p>
+
+</div>
+</div>
+<a id="a44730bbc76261e6a87e8cd3cae9dd897"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44730bbc76261e6a87e8cd3cae9dd897">&#9670;&nbsp;</a></span>_counter_16_bit</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_adafruit___zero_timer_1_1counter__16__bit.html">counter_16_bit</a> Adafruit_ZeroTimer::_counter_16_bit</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Stats for when we have the counter configed for 16 bit operation </p>
+
+</div>
+</div>
+<a id="a48a5216bb658c5478b8d610df604d505"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48a5216bb658c5478b8d610df604d505">&#9670;&nbsp;</a></span>_counter_32_bit</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_adafruit___zero_timer_1_1counter__32__bit.html">counter_32_bit</a> Adafruit_ZeroTimer::_counter_32_bit</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Stats for when we have the counter configed for 32 bit operation </p>
+
+</div>
+</div>
+<a id="aa78dfefd1db5aa2fd9b0797e529985a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa78dfefd1db5aa2fd9b0797e529985a3">&#9670;&nbsp;</a></span>_pwm_channel</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_adafruit___zero_timer_1_1pwm__channel.html">pwm_channel</a> Adafruit_ZeroTimer::_pwm_channel[<a class="el" href="_adafruit___zero_timer_8h.html#aa911e2dbc7cd820aad4976e29191c32a">NUM_PWM_CHANNELS</a>]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>status of the 2 PWM channels per timer </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="_adafruit___zero_timer_8h_source.html">Adafruit_ZeroTimer.h</a></li>
-<li>Adafruit_ZeroTimer.cpp</li>
+<li><a class="el" href="_adafruit___zero_timer_8cpp.html">Adafruit_ZeroTimer.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
