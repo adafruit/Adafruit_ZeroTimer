@@ -3,9 +3,12 @@
  */
 
 #include "Arduino.h"
+#include "wiring_private.h"
+
 #ifndef _ADAFRUIT_ZEROTIMER_
 #define _ADAFRUIT_ZEROTIMER_
 
+/**! Prescale from the peripheral clock **/
 enum tc_clock_prescaler {
   /** Divide clock by 1 */
   TC_CLOCK_PRESCALER_DIV1 = TC_CTRLA_PRESCALER(0),
@@ -25,20 +28,21 @@ enum tc_clock_prescaler {
   TC_CLOCK_PRESCALER_DIV1024 = TC_CTRLA_PRESCALER(7),
 };
 
+/**! The counter size for this TC **/
 enum tc_counter_size {
-  /** The counter's maximum value is 0xFF, the period register is
+  /**! The counter's maximum value is 0xFF, the period register is
    * available to be used as top value
    */
   TC_COUNTER_SIZE_8BIT = TC_CTRLA_MODE_COUNT8,
 
-  /** The counter's maximum value is 0xFFFF. There is no separate
+  /**! The counter's maximum value is 0xFFFF. There is no separate
    * period register, to modify top one of the capture compare
    * registers has to be used. This limits the amount of
    * available channels.
    */
   TC_COUNTER_SIZE_16BIT = TC_CTRLA_MODE_COUNT16,
 
-  /** The counter's maximum value is 0xFFFFFFFF. There is no separate
+  /**! The counter's maximum value is 0xFFFFFFFF. There is no separate
    * period register, to modify top one of the capture compare
    * registers has to be used. This limits the amount of
    * available channels.
@@ -47,38 +51,44 @@ enum tc_counter_size {
 };
 
 #if defined(__SAMD51__)
+/**! The output pin PWM style **/
 enum tc_wave_generation {
-  TC_WAVE_GENERATION_NORMAL_FREQ = TC_WAVE_WAVEGEN_NFRQ,
-  TC_WAVE_GENERATION_MATCH_FREQ = TC_WAVE_WAVEGEN_MFRQ,
-  TC_WAVE_GENERATION_NORMAL_PWM = TC_WAVE_WAVEGEN_NPWM,
-  TC_WAVE_GENERATION_MATCH_PWM = TC_WAVE_WAVEGEN_MPWM,
+  TC_WAVE_GENERATION_NORMAL_FREQ =
+      TC_WAVE_WAVEGEN_NFRQ, ///< Normal frequency output
+  TC_WAVE_GENERATION_MATCH_FREQ =
+      TC_WAVE_WAVEGEN_MFRQ, ///< Match frequency output
+  TC_WAVE_GENERATION_NORMAL_PWM = TC_WAVE_WAVEGEN_NPWM, ///< Normal PWM output
+  TC_WAVE_GENERATION_MATCH_PWM = TC_WAVE_WAVEGEN_MPWM,  ///< Match PWM output
 };
 #else
+/**! The output pin PWM style **/
 enum tc_wave_generation {
-  /** Top is maximum, except in 8-bit counter size where it is the PER
+  /**! Top is maximum, except in 8-bit counter size where it is the PER
    * register
    */
   TC_WAVE_GENERATION_NORMAL_FREQ = TC_CTRLA_WAVEGEN_NFRQ,
 
-  /** Top is CC0, except in 8-bit counter size where it is the PER
+  /**! Top is CC0, except in 8-bit counter size where it is the PER
    * register
    */
   TC_WAVE_GENERATION_MATCH_FREQ = TC_CTRLA_WAVEGEN_MFRQ,
 
-  /** Top is maximum, except in 8-bit counter size where it is the PER
+  /**! Top is maximum, except in 8-bit counter size where it is the PER
    * register
    */
   TC_WAVE_GENERATION_NORMAL_PWM = TC_CTRLA_WAVEGEN_NPWM,
 
-  /** Top is CC0, except in 8-bit counter size where it is the PER
+  /**! Top is CC0, except in 8-bit counter size where it is the PER
    * register
    */
   TC_WAVE_GENERATION_MATCH_PWM = TC_CTRLA_WAVEGEN_MPWM,
 };
 #endif
 
+/**! Which way the counter goes */
 enum tc_count_direction { TC_COUNT_DIRECTION_UP = 0, TC_COUNT_DIRECTION_DOWN };
 
+/**! What event triggers a callback */
 enum tc_callback {
   TC_CALLBACK_OVERFLOW = 0,
   TC_CALLBACK_ERROR,
@@ -87,7 +97,9 @@ enum tc_callback {
   TC_CALLBACK_N
 };
 
+/**! How many PWM channels per TC **/
 #define NUM_PWM_CHANNELS 2
+/**! How many CC channels per TC **/
 #define NUM_CC_CHANNELS 2
 
 /**************************************************************************/

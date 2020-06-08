@@ -10,23 +10,26 @@
  *
  * BSD license, all text above must be included in any redistribution
  */
-#include "wiring_private.h"
 #include <Adafruit_ZeroTimer.h>
 
 // mostly from asfdoc_sam0_tc_basic_use_case.html
 
 #ifndef TC_INST_MAX_ID
-#define TC_INST_MAX_ID 5
+#define TC_INST_MAX_ID 5 ///< The max number of TC instances
 #endif
 
 #ifndef TC_INSTANCE_OFFSET
-#define TC_INSTANCE_OFFSET 3
+#define TC_INSTANCE_OFFSET 3 ///< The number of the first TC instance
+
 #endif
 
 extern "C" {
 
-#define TC_MAX_CALLBACKS (TC_CALLBACK_BITS * 3)
+/**! togglebits for callbacks */
 #define TC_CALLBACK_BITS 6
+/**! How many callbacks we get */
+#define TC_MAX_CALLBACKS (TC_CALLBACK_BITS * 3)
+
 static void (*__cb[TC_MAX_CALLBACKS])(void);
 /** Bit mask for callbacks registered */
 static uint32_t _register_callback_mask = 0;
