@@ -140,7 +140,7 @@ bool Adafruit_ZeroTimer::tc_init() {
 #if defined(__SAMD51__)
   GCLK->PCHCTRL[inst_gclk_id[instance]].reg =
       GCLK_PCHCTRL_GEN_GCLK1_Val |
-      (1 << GCLK_PCHCTRL_CHEN_Pos); // use clock generator 0
+      (1 << GCLK_PCHCTRL_CHEN_Pos); // use GCLK1 to get 48MHz on SAMD51
 #else
   /* Enable the user interface clock in the PM */
   PM->APBCMASK.reg |= inst_pm_apbmask[instance];
@@ -151,7 +151,7 @@ bool Adafruit_ZeroTimer::tc_init() {
     PM->APBCMASK.reg |= inst_pm_apbmask[instance + 1];
   }
 
-  /* Setup clock for module */
+  /* Setup clock for module.  On most SAMD chips, GCLK0 is 48MHz */
   GCLK->CLKCTRL.reg = (uint16_t)(GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN_GCLK0 |
                                  inst_gclk_id[instance]);
   while (GCLK->STATUS.bit.SYNCBUSY == 1)
