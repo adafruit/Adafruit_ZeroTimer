@@ -35,7 +35,7 @@ void setup() {
   Serial.println(freq);
 
   // Set up the flexible divider/compare
-  uint8_t divider  = 1;
+  uint16_t divider  = 1;
   uint16_t compare = 0;
   tc_clock_prescaler prescaler = TC_CLOCK_PRESCALER_DIV1;
 
