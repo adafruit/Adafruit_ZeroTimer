@@ -109,7 +109,7 @@ enum tc_callback {
 */
 /**************************************************************************/
 class Adafruit_ZeroTimer {
-public:
+ public:
   Adafruit_ZeroTimer(uint8_t tn);
 
   boolean PWMout(boolean pwmout, uint8_t channum, uint8_t pin);
@@ -126,10 +126,10 @@ public:
 
   static void timerHandler(uint8_t timerNum);
 
-protected:
+ protected:
   uint8_t _timernum; ///< Which TC this is, 3 for TC3, 4 for TC4, etc
 
-  Tc *_hw; ///< Pointer to the timer we're wrappering
+  Tc* _hw; ///< Pointer to the timer we're wrappering
 
   tc_clock_prescaler
       _clock_prescaler;          ///< Prescale divider from timer clock source
@@ -147,7 +147,7 @@ protected:
                                                   ///< the timer
     uint8_t period; ///< The period/top value for this timer
     uint8_t value;  ///< The count value
-  };                ///< Helper struct to hold state for 8-bit configured TC
+  }; ///< Helper struct to hold state for 8-bit configured TC
   counter_8_bit _counter_8_bit; ///< Stats for when we have the counter configed
                                 ///< for 8 bit operation
 
@@ -175,7 +175,7 @@ protected:
     bool enabled;     ///< Whether its activated
     uint32_t pin_mux; ///< The direct chip muxing used for this PWM output
     uint32_t pin_out; ///< The direct chip pad name used for this PWM output
-  };                  ///< Helper struct to hold state for a PWM output channel
+  }; ///< Helper struct to hold state for a PWM output channel
   pwm_channel _pwm_channel[NUM_PWM_CHANNELS]; ///< status of the 2 PWM channels
                                               ///< per timer
 

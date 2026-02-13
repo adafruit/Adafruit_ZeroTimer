@@ -37,7 +37,7 @@ static uint32_t _register_callback_mask = 0;
 static uint32_t _enable_callback_mask = 0;
 };
 
-static inline bool tc_is_syncing(Tc *const hw) {
+static inline bool tc_is_syncing(Tc* const hw) {
 #if defined(__SAMD51__)
   return hw->COUNT8.SYNCBUSY.reg > 0;
 #else
@@ -77,11 +77,9 @@ bool Adafruit_ZeroTimer::tc_init() {
 #if defined(__SAMD51__)
   /* Array of GLCK ID for different TC instances */
 
-  uint32_t inst_gclk_id[] = {
-    TC3_GCLK_ID,
+  uint32_t inst_gclk_id[] = {TC3_GCLK_ID,
 #if defined(TC4_GCLK_ID)
-    TC4_GCLK_ID,
-    TC5_GCLK_ID
+                             TC4_GCLK_ID, TC5_GCLK_ID
 #endif
   };
 #else // SAMD21
@@ -211,64 +209,64 @@ bool Adafruit_ZeroTimer::tc_init() {
 
   /* Switch for TC counter size  */
   switch (_counter_size) {
-  case TC_COUNTER_SIZE_8BIT:
-    while (tc_is_syncing(_hw))
-      ;
+    case TC_COUNTER_SIZE_8BIT:
+      while (tc_is_syncing(_hw))
+        ;
 
-    _hw->COUNT8.COUNT.reg = _counter_8_bit.value;
+      _hw->COUNT8.COUNT.reg = _counter_8_bit.value;
 
-    while (tc_is_syncing(_hw))
-      ;
+      while (tc_is_syncing(_hw))
+        ;
 
-    _hw->COUNT8.PER.reg = _counter_8_bit.period;
+      _hw->COUNT8.PER.reg = _counter_8_bit.period;
 
-    while (tc_is_syncing(_hw))
-      ;
+      while (tc_is_syncing(_hw))
+        ;
 
-    _hw->COUNT8.CC[0].reg = _counter_8_bit.compare_capture_channel[0];
+      _hw->COUNT8.CC[0].reg = _counter_8_bit.compare_capture_channel[0];
 
-    while (tc_is_syncing(_hw))
-      ;
+      while (tc_is_syncing(_hw))
+        ;
 
-    _hw->COUNT8.CC[1].reg = _counter_8_bit.compare_capture_channel[1];
+      _hw->COUNT8.CC[1].reg = _counter_8_bit.compare_capture_channel[1];
 
-    return true;
+      return true;
 
-  case TC_COUNTER_SIZE_16BIT:
-    while (tc_is_syncing(_hw))
-      ;
+    case TC_COUNTER_SIZE_16BIT:
+      while (tc_is_syncing(_hw))
+        ;
 
-    _hw->COUNT16.COUNT.reg = _counter_16_bit.value;
+      _hw->COUNT16.COUNT.reg = _counter_16_bit.value;
 
-    while (tc_is_syncing(_hw))
-      ;
+      while (tc_is_syncing(_hw))
+        ;
 
-    _hw->COUNT16.CC[0].reg = _counter_16_bit.compare_capture_channel[0];
+      _hw->COUNT16.CC[0].reg = _counter_16_bit.compare_capture_channel[0];
 
-    while (tc_is_syncing(_hw))
-      ;
+      while (tc_is_syncing(_hw))
+        ;
 
-    _hw->COUNT16.CC[1].reg = _counter_16_bit.compare_capture_channel[1];
+      _hw->COUNT16.CC[1].reg = _counter_16_bit.compare_capture_channel[1];
 
-    return true;
+      return true;
 
-  case TC_COUNTER_SIZE_32BIT:
-    while (tc_is_syncing(_hw))
-      ;
+    case TC_COUNTER_SIZE_32BIT:
+      while (tc_is_syncing(_hw))
+        ;
 
-    _hw->COUNT32.COUNT.reg = _counter_32_bit.value;
+      _hw->COUNT32.COUNT.reg = _counter_32_bit.value;
 
-    while (tc_is_syncing(_hw))
-      ;
+      while (tc_is_syncing(_hw))
+        ;
 
-    _hw->COUNT32.CC[0].reg = _counter_32_bit.compare_capture_channel[0];
+      _hw->COUNT32.CC[0].reg = _counter_32_bit.compare_capture_channel[0];
 
-    while (tc_is_syncing(_hw))
-      ;
+      while (tc_is_syncing(_hw))
+        ;
 
-    _hw->COUNT32.CC[1].reg = _counter_32_bit.compare_capture_channel[1];
+      _hw->COUNT32.CC[1].reg = _counter_32_bit.compare_capture_channel[1];
 
-    return true;
+      return true;
   }
 
   return false;
@@ -287,7 +285,7 @@ bool Adafruit_ZeroTimer::tc_init() {
 /**************************************************************************/
 boolean Adafruit_ZeroTimer::PWMout(boolean pwmout, uint8_t channum,
                                    uint8_t pin) {
-  Tc *const tc_modules[TC_INST_NUM] = TC_INSTS;
+  Tc* const tc_modules[TC_INST_NUM] = TC_INSTS;
 
   if (channum > 1)
     return false; // we only support pwm #0 or #1
@@ -483,7 +481,7 @@ void Adafruit_ZeroTimer::configure(tc_clock_prescaler prescale,
                                    tc_counter_size countersize,
                                    tc_wave_generation wavegen,
                                    tc_count_direction countdir) {
-  Tc *const tc_modules[TC_INST_NUM] = TC_INSTS;
+  Tc* const tc_modules[TC_INST_NUM] = TC_INSTS;
 
   if (_timernum > TC_INST_MAX_ID)
     return;
@@ -586,11 +584,9 @@ void Adafruit_ZeroTimer::setCallback(boolean enable, tc_callback cb_type,
       __cb[cb_type + (instance * TC_CALLBACK_BITS)] = callback_func;
     }
 
-    IRQn_Type _irqs[] = {
-      TC3_IRQn,
+    IRQn_Type _irqs[] = {TC3_IRQn,
 #if defined(TC4_GCLK_ID)
-      TC4_IRQn,
-      TC5_IRQn
+                         TC4_IRQn, TC5_IRQn
 #endif
     };
     NVIC_ClearPendingIRQ(_irqs[instance]);
@@ -649,17 +645,17 @@ void Adafruit_ZeroTimer::setCompare(uint8_t channum, uint32_t compare) {
 
   /* Read out based on the TC counter size */
   switch (_counter_size) {
-  case TC_COUNTER_SIZE_8BIT:
-    _hw->COUNT8.CC[channum].reg = (uint8_t)compare;
-    break;
+    case TC_COUNTER_SIZE_8BIT:
+      _hw->COUNT8.CC[channum].reg = (uint8_t)compare;
+      break;
 
-  case TC_COUNTER_SIZE_16BIT:
-    _hw->COUNT16.CC[channum].reg = (uint16_t)compare;
-    break;
+    case TC_COUNTER_SIZE_16BIT:
+      _hw->COUNT16.CC[channum].reg = (uint16_t)compare;
+      break;
 
-  case TC_COUNTER_SIZE_32BIT:
-    _hw->COUNT32.CC[channum].reg = (uint32_t)compare;
-    break;
+    case TC_COUNTER_SIZE_32BIT:
+      _hw->COUNT32.CC[channum].reg = (uint32_t)compare;
+      break;
   }
 }
 
@@ -731,24 +727,24 @@ static inline void __tc_cb_handler(uint32_t mask, uint32_t offset) {
 void Adafruit_ZeroTimer::timerHandler(uint8_t timerNum) {
   uint32_t mask;
   switch (timerNum) {
-  case 3:
-    mask = TC3->COUNT8.INTFLAG.reg;
-    __tc_cb_handler(mask, 0);
-    TC3->COUNT8.INTFLAG.reg = 0b00111011; // clear
-    break;
+    case 3:
+      mask = TC3->COUNT8.INTFLAG.reg;
+      __tc_cb_handler(mask, 0);
+      TC3->COUNT8.INTFLAG.reg = 0b00111011; // clear
+      break;
 #if defined(TC4_GCLK_ID)
-  case 4:
-    mask = TC4->COUNT8.INTFLAG.reg;
-    __tc_cb_handler(mask, TC_CALLBACK_BITS);
-    TC4->COUNT8.INTFLAG.reg = 0b00111011; // clear
-    break;
+    case 4:
+      mask = TC4->COUNT8.INTFLAG.reg;
+      __tc_cb_handler(mask, TC_CALLBACK_BITS);
+      TC4->COUNT8.INTFLAG.reg = 0b00111011; // clear
+      break;
 #endif
 #if defined(TC5_GCLK_ID)
-  case 5:
-    mask = TC5->COUNT8.INTFLAG.reg;
-    __tc_cb_handler(mask, TC_CALLBACK_BITS * 2);
-    TC5->COUNT8.INTFLAG.reg = 0b00111011; // clear
-    break;
+    case 5:
+      mask = TC5->COUNT8.INTFLAG.reg;
+      __tc_cb_handler(mask, TC_CALLBACK_BITS * 2);
+      TC5->COUNT8.INTFLAG.reg = 0b00111011; // clear
+      break;
 #endif
   }
 }
